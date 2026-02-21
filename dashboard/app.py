@@ -15,6 +15,7 @@ import sys
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
+from src.data.live_scraper import get_live_data as get_live_scraped_data, is_live_available
 from src.data.real_data_2026 import (
     get_standings_df, get_results_df, get_upcoming_df, 
     TEAMS_2026, STANDINGS_2026
@@ -58,13 +59,13 @@ st.markdown("""
 
 
 # ─── Load Data ───
-@st.cache_data
-def load_real_data():
-    return get_results_df()
-
-@st.cache_data
-def load_standings():
-    return get_standings_df()
+@st.cache_data(ttl=3600)
+def load_live_data():
+    """Carga datos en vivo (scraping FBref) con fallback a datos locales."""
+    try:
+        return get_live_scraped_data()
+    except Exception:
+        return get_standings_df(), get_results_df(), get_upcoming_df()
 
 @st.cache_data
 def load_predictions():
@@ -80,15 +81,34 @@ def load_heatmap():
         return pd.read_csv(path, encoding="utf-8-sig", index_col=0)
     return None
 
-df = load_real_data()
-standings = load_standings()
-teams = TEAMS_2026
+standings, df, upcoming_data = load_live_data()
+teams = standings["team"].tolist() if not standings.empty and "team" in standings.columns else TEAMS_2026
+
+# Detectar fecha actual
+current_fecha = int(df["fecha"].max()) if not df.empty and "fecha" in df.columns else 7
 
 
 # ─── Sidebar ───
 st.sidebar.markdown("# ⚽ Liga BetPlay")
 st.sidebar.markdown("### 🇨🇴 Temporada I-2026")
-st.sidebar.markdown(f"*Actualizado: Fecha 7*")
+
+# Datos live con FBref
+cache_file = BASE_DIR / "data" / "cache" / "live_standings.json"
+if cache_file.exists():
+    st.sidebar.success(f"📡 Datos en vivo (Fecha {current_fecha})")
+else:
+    st.sidebar.warning(f"📋 Datos locales (Fecha {current_fecha})")
+
+if st.sidebar.button("🔄 Actualizar datos"):
+    # Borrar caché
+    import shutil
+    cache_dir = BASE_DIR / "data" / "cache"
+    if cache_dir.exists():
+        shutil.rmtree(cache_dir)
+        cache_dir.mkdir(parents=True, exist_ok=True)
+    st.cache_data.clear()
+    st.rerun()
+
 st.sidebar.markdown("---")
 
 page = st.sidebar.radio(

@@ -33,3 +33,7 @@ Thumbs.db
 # Reports (generated)
 reports/*.png
 reports/*.html
+
+api_key.txt
+data/api_key.txt
+data/cache/

@@ -125,19 +125,21 @@ RESULTS_2026 = [
     {"fecha": 7, "date": "2026-02-15", "home": "Deportes Tolima",     "away": "Boyacá Chicó",       "hg": 1, "ag": 0},
     {"fecha": 7, "date": "2026-02-15", "home": "Deportivo Cali",      "away": "Once Caldas",        "hg": 2, "ag": 0},
     {"fecha": 7, "date": "2026-02-16", "home": "Fortaleza",           "away": "Llaneros",           "hg": 0, "ag": 0},
-    {"fecha": 7, "date": "2026-02-17", "home": "Alianza FC",          "away": "Cúcuta Deportivo",   "hg": 1, "ag": 1},
     {"fecha": 7, "date": "2026-02-17", "home": "Jaguares",            "away": "Santa Fe",           "hg": 3, "ag": 1},
     {"fecha": 7, "date": "2026-02-18", "home": "Junior",              "away": "América de Cali",    "hg": 2, "ag": 1},
     # Pendiente: Águilas Doradas vs Bucaramanga
+    
+    # Fecha 8 (Feb 17-23, 2026) — Resultados parciales
+    {"fecha": 8, "date": "2026-02-17", "home": "Alianza FC",          "away": "Cúcuta Deportivo",   "hg": 1, "ag": 1},
+    {"fecha": 8, "date": "2026-02-20", "home": "Llaneros",            "away": "Medellín",           "hg": 2, "ag": 2},
+    {"fecha": 8, "date": "2026-02-20", "home": "Deportivo Pereira",   "away": "Deportivo Pasto",    "hg": 2, "ag": 2},
 ]
 
 # ═══════════════════════════════════════════════════════════
-# FIXTURE FECHA 8 (Feb 20-23, 2026)
+# FIXTURE FECHA 8 — Partidos restantes (Feb 21-23, 2026)
 # ═══════════════════════════════════════════════════════════
 
 UPCOMING_FIXTURES = [
-    {"fecha": 8, "date": "2026-02-20", "home": "Llaneros",            "away": "Medellín"},
-    {"fecha": 8, "date": "2026-02-20", "home": "Deportivo Pereira",   "away": "Deportivo Pasto"},
     {"fecha": 8, "date": "2026-02-21", "home": "Once Caldas",         "away": "Fortaleza"},
     {"fecha": 8, "date": "2026-02-21", "home": "Bucaramanga",         "away": "Deportivo Cali"},
     {"fecha": 8, "date": "2026-02-21", "home": "Atlético Nacional",   "away": "Alianza FC"},
