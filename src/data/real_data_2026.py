@@ -161,11 +161,43 @@ TEAMS_2026 = [
 
 
 def get_standings_df() -> pd.DataFrame:
-    """Retorna la tabla de posiciones actual como DataFrame."""
-    df = pd.DataFrame(STANDINGS_2026, columns=[
-        "pos", "team", "pj", "g", "e", "p", "gf", "gc", "dif", "pts"
-    ])
-    df = df.set_index("pos")
+    """Calcula la tabla de posiciones automáticamente a partir de los resultados."""
+    stats = {team: {"pj": 0, "g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0} for team in TEAMS_2026}
+    
+    for match in RESULTS_2026:
+        home, away = match["home"], match["away"]
+        hg, ag = match["hg"], match["ag"]
+        
+        if home not in stats or away not in stats:
+            continue
+        
+        stats[home]["pj"] += 1
+        stats[away]["pj"] += 1
+        stats[home]["gf"] += hg
+        stats[home]["gc"] += ag
+        stats[away]["gf"] += ag
+        stats[away]["gc"] += hg
+        
+        if hg > ag:
+            stats[home]["g"] += 1
+            stats[away]["p"] += 1
+        elif hg == ag:
+            stats[home]["e"] += 1
+            stats[away]["e"] += 1
+        else:
+            stats[away]["g"] += 1
+            stats[home]["p"] += 1
+    
+    rows = []
+    for team, s in stats.items():
+        dif = s["gf"] - s["gc"]
+        pts = s["g"] * 3 + s["e"]
+        rows.append([team, s["pj"], s["g"], s["e"], s["p"], s["gf"], s["gc"], dif, pts])
+    
+    df = pd.DataFrame(rows, columns=["team", "pj", "g", "e", "p", "gf", "gc", "dif", "pts"])
+    df = df.sort_values(["pts", "dif", "gf"], ascending=False).reset_index(drop=True)
+    df.index = df.index + 1
+    df.index.name = "pos"
     return df
 
 
